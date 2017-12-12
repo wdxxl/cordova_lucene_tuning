@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Hello World</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/index.js"></script>
+        <script type="text/javascript" charset="utf-8">
+            function success(result){
+                alert("success");
+            }
+
+            function failure(result){
+                alert("failure");
+            }
+
+            function coolMethod() {
+                cordova.plugins.lucene_plugin.coolMethod("123", success, failure);
+            }
+        </script>
+    </head>
+
+    <body style="padding-top:20px;">
+        <input type="button" id="btn" onclick="coolMethod()" value="coolMethod" />
+        </br>
+    </body>
+</html>
