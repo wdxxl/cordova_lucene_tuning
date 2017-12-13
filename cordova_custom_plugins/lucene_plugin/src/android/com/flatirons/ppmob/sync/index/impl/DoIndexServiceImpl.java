@@ -10,6 +10,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.j2objc.annotations.AutoreleasePool;
+import com.google.j2objc.annotations.Weak;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -67,13 +69,13 @@ public class DoIndexServiceImpl implements IDoIndexService {
     private String folderName;
     private String libraryId;
     private String publicationId;
-    final private Analyzer keywordAnalyzer = new KeywordAnalyzer();
-    final private Analyzer FTS_TextGeneral_Analyzer = new FTS_TextGeneral_Analyzer();
-    final private Analyzer FTS_TextGeneralKeyword_Analyzer = new FTS_TextGeneralKeyword_Analyzer();
-    final private Analyzer FTS_TextGeneralHTML_Analyzer = new FTS_TextGeneralHTML_Analyzer();
-    final private Analyzer FTS_TextGeneralFIN_Analyzer = new FTS_TextGeneralFIN_Analyzer();
-    final private Analyzer FTS_TextHyphn_Analyzer = new FTS_TextHyphn_Analyzer();
-    final private Analyzer FF_TextGeneralHTML_Analyzer = new FF_TextGeneralHTML_Analyzer();
+    private Analyzer keywordAnalyzer = new KeywordAnalyzer();
+    private Analyzer FTS_TextGeneral_Analyzer = new FTS_TextGeneral_Analyzer();
+    private Analyzer FTS_TextGeneralKeyword_Analyzer = new FTS_TextGeneralKeyword_Analyzer();
+    private Analyzer FTS_TextGeneralHTML_Analyzer = new FTS_TextGeneralHTML_Analyzer();
+    private Analyzer FTS_TextGeneralFIN_Analyzer = new FTS_TextGeneralFIN_Analyzer();
+    private Analyzer FTS_TextHyphn_Analyzer = new FTS_TextHyphn_Analyzer();
+    private Analyzer FF_TextGeneralHTML_Analyzer = new FF_TextGeneralHTML_Analyzer();
 
 
     @Override
@@ -96,11 +98,19 @@ public class DoIndexServiceImpl implements IDoIndexService {
             this.publicationId = publicationId;
             this.validateBasicInfo();
             this.processAllFolders();
+            keywordAnalyzer = null;
+            FTS_TextGeneral_Analyzer = null;
+            FTS_TextGeneralKeyword_Analyzer = null;
+            FTS_TextGeneralHTML_Analyzer = null;
+            FTS_TextGeneralFIN_Analyzer = null;
+            FTS_TextHyphn_Analyzer = null;
+            FF_TextGeneralHTML_Analyzer = null;
         } else {
             throw new Exception("Common Service list shouldn't be empty.");
         }
     }
 
+    @AutoreleasePool
     private void validateBasicInfo() throws Exception {
         if (this.logService == null || this.callbackService == null || this.fileService == null) {
             throw new Exception("Failed to init each services. LogService: " + this.logService
@@ -115,6 +125,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         }
     }
 
+    @AutoreleasePool
     private void processAllFolders() throws Exception {
         try {
             logService.log(this.folderName + " -- Start creating index...");
@@ -129,6 +140,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         }
     }
 
+    @AutoreleasePool
     private List<File> getOriginalIndexFiles(String subPath) {
         final File subFolder = new File(this.unzipIndexPath + File.separator + "index" + File.separator + subPath);
         final List<File> returnList = new ArrayList<File>();
@@ -151,6 +163,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         return returnList;
     }
 
+    @AutoreleasePool
     private void processEachFolder(String subPath, List<File> originalIndexFiles) throws Exception {
         Directory directory = null;
         IndexWriter writer = null;
@@ -170,10 +183,12 @@ public class DoIndexServiceImpl implements IDoIndexService {
         } finally {
             logService.log("Start optimizing index... ");
             long startTime = new Date().getTime();
-            writer.optimize();
+            // writer.optimize();
             logService.log("Finish optimizing index... Cost time: " + (new Date().getTime() - startTime));
             writer.close();
             directory.close();
+            writer = null;
+            directory = null;
         }
     }
 
@@ -181,7 +196,6 @@ public class DoIndexServiceImpl implements IDoIndexService {
         int currentNumber = 0;
         long totalIndexTime = 0;
         final int totalIndexFiles = originalIndexFiles.size();
-        Document doc = null;
         for (File indexFile : originalIndexFiles) {
             if (indexFile.exists() && indexFile.isFile()) {
                 try {
@@ -207,6 +221,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         }
     }
 
+    @AutoreleasePool
     private void buildDocument(IndexWriter writer, String subPath, File indexFile) throws Exception {
         String jsonFromFile = "";
         String key = "";
@@ -217,6 +232,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
             JsonObject jsonObj = new JsonParser().parse(jsonFromFile).getAsJsonObject();
             key = this.buildDocument(subPath, doc, jsonObj);
             writer.updateDocument(new Term("id", doc.get("id")),doc);
+            jsonObj = null;
         } catch (Exception e) {
             logService.log("There is something wrong during build document. Path: " + indexFile.getAbsolutePath() + ", Key: " + key);
             logService.log("JSON String: " + jsonFromFile);
@@ -224,14 +240,17 @@ public class DoIndexServiceImpl implements IDoIndexService {
         }
     }
 
+    @AutoreleasePool
     private void deleteDocumentByQuery(IndexWriter writer) throws IOException {
         BooleanQuery query = new BooleanQuery();
         query.add(new TermQuery(new Term("pps_library_id", this.libraryId)), Occur.MUST);
         query.add(new TermQuery(new Term("pps_publication_id", this.publicationId)), Occur.MUST);
         writer.deleteDocuments(query);
+        query = null;
         logService.log("Delete Document with libraryId: "+ this.libraryId +" and publicationId: " + this.publicationId);
     }
 
+    @AutoreleasePool
     private String buildDocument(String subPath, Document doc, JsonObject jsonObj) {
         String configValue = "";
         JsonElement value = null;
@@ -254,11 +273,13 @@ public class DoIndexServiceImpl implements IDoIndexService {
                     doc.add(new Field(key, value.getAsString(), stored ? Field.Store.YES : Field.Store.NO,
                             indexed ? Field.Index.ANALYZED : Field.Index.NO, indexed ? Field.TermVector.YES : Field.TermVector.NO));
                 }
+                value = null;
             }
         }
         return key;
     }
 
+    @AutoreleasePool
     private PerFieldAnalyzerWrapper getPerFieldAnalyzerWrapper(String subPath) {
         final String preName = "index.field." + subPath + ".";
         final Map<String, Analyzer> analyzerPerField = new HashMap<String, Analyzer>();
@@ -274,6 +295,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         return analyzer;
     }
 
+    @AutoreleasePool
     private String getSplitValue(String multipleValues, String key) {
         if (multipleValues != null && !"".equals(multipleValues.trim()) && key != null && !"".equals(key.trim())) {
             final String[] subValues = multipleValues.split(";");
@@ -290,6 +312,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         return "";
     }
 
+    @AutoreleasePool
     private Analyzer getAnalyzer(String type) {
         Analyzer analyzer = null;
         if ("string".equalsIgnoreCase(type)) {
