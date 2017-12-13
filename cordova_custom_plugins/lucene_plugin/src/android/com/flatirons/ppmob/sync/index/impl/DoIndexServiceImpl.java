@@ -129,8 +129,8 @@ public class DoIndexServiceImpl implements IDoIndexService {
     private void processAllFolders() throws Exception {
         try {
             logService.log(this.folderName + " -- Start creating index...");
-            for (String subPath : this.indexSubPaths) {
-                List<File> originalIndexFiles = this.getOriginalIndexFiles(subPath);
+            for (@AutoreleasePool String subPath : this.indexSubPaths) {
+                List<String> originalIndexFiles = this.getOriginalIndexFiles(subPath);
                 logService.log(this.folderName + " -- Start creating index for path: " + subPath + ", total index files: " + originalIndexFiles.size());
                 this.processEachFolder(subPath, originalIndexFiles);
             }
@@ -141,22 +141,22 @@ public class DoIndexServiceImpl implements IDoIndexService {
     }
 
     @AutoreleasePool
-    private List<File> getOriginalIndexFiles(String subPath) {
+    private List<String> getOriginalIndexFiles(String subPath) {
         File subFolder = new File(this.unzipIndexPath + File.separator + "index" + File.separator + subPath);
-        List<File> returnList = new ArrayList<File>();
+        List<String> returnList = new ArrayList<String>();
         if (subFolder.isDirectory() && subFolder.exists()) {
             File[] allFiles = subFolder.listFiles();
             if (allFiles != null) {
                 for (File file : allFiles) {
                     if (file.isFile()) {
-                        returnList.add(file);
+                        returnList.add(file.getAbsolutePath());
                     }
                 }
             }
-            Collections.sort(returnList, new Comparator<File>() {
+            Collections.sort(returnList, new Comparator<String>() {
                 @Override
-                public int compare(File o1, File o2) {
-                    return o2.getName().compareTo(o1.getName());
+                public int compare(String o1, String o2) {
+                    return o2.compareTo(o1);
                 }
             });
         }
@@ -165,7 +165,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     }
 
     @AutoreleasePool
-    private void processEachFolder(String subPath, List<File> originalIndexFiles) throws Exception {
+    private void processEachFolder(String subPath, List<String> originalIndexFiles) throws Exception {
         Directory directory = null;
         IndexWriter writer = null;
         try {
@@ -190,15 +190,18 @@ public class DoIndexServiceImpl implements IDoIndexService {
             directory.close();
             writer = null;
             directory = null;
+            System.gc();
         }
     }
 
-    private void createIndex(List<File> originalIndexFiles, IndexWriter writer, String subPath) throws Exception {
+    @AutoreleasePool
+    private void createIndex(List<String> originalIndexFiles, IndexWriter writer, String subPath) throws Exception {
         int currentNumber = 0;
         long totalIndexTime = 0;
         int totalIndexFiles = originalIndexFiles.size();
-        for (File indexFile : originalIndexFiles) {
-            if (indexFile.exists() && indexFile.isFile()) {
+        for (@AutoreleasePool String indexFile : originalIndexFiles) {
+            File tempFile = new File(indexFile);
+            if (tempFile.exists() && tempFile.isFile()) {
                 try {
                     long startTime = new Date().getTime();
                     this.buildDocument(writer, subPath, indexFile);
@@ -215,7 +218,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
                     throw e;
                 }
             } else {
-                Exception e = new Exception("There is no index file for path:" + indexFile.getAbsolutePath());
+                Exception e = new Exception("There is no index file for path:" + indexFile);
                 logService.log(e);
                 throw e;
             }
@@ -223,7 +226,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     }
 
     @AutoreleasePool
-    private void buildDocument(IndexWriter writer, String subPath, File indexFile) throws Exception {
+    private void buildDocument(IndexWriter writer, String subPath, String indexFile) throws Exception {
         String jsonFromFile = "";
         String key = "";
         try {
@@ -234,7 +237,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
             writer.updateDocument(new Term("id", doc.get("id")),doc);
             jsonObj = null;
         } catch (Exception e) {
-            logService.log("There is something wrong during build document. Path: " + indexFile.getAbsolutePath() + ", Key: " + key);
+            logService.log("There is something wrong during build document. Path: " + indexFile + ", Key: " + key);
             logService.log("JSON String: " + jsonFromFile);
             throw e;
         }
@@ -255,7 +258,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         String configValue = "";
         JsonElement value = null;
         String key = "";
-        for (Map.Entry<String, JsonElement> entry : jsonObj.entrySet()) {
+        for (@AutoreleasePool Map.Entry<String, JsonElement> entry : jsonObj.entrySet()) {
             key = entry.getKey();
             configValue = this.fieldsConfigs.get("index.field." + subPath + "." + key);
             value = jsonObj.get(key);
@@ -263,12 +266,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
                 boolean stored = Boolean.parseBoolean(this.getSplitValue(configValue, "stored"));
                 boolean indexed = Boolean.parseBoolean(this.getSplitValue(configValue, "indexed"));
                 if (value instanceof JsonArray) {
-                    JsonArray array = (JsonArray) value;
-                    for (JsonElement jsonElement : array) {
-                        doc.add(new Field(key, jsonElement.getAsString(), stored ? Field.Store.YES : Field.Store.NO,
-                                indexed ? Field.Index.ANALYZED : Field.Index.NO, indexed ? Field.TermVector.YES : Field.TermVector.NO));
-                    }
-                    array = null;
+                    buildJsonArrayDocument(doc, key, stored, indexed, value);
                 } else {
                     doc.add(new Field(key, value.getAsString(), stored ? Field.Store.YES : Field.Store.NO,
                             indexed ? Field.Index.ANALYZED : Field.Index.NO, indexed ? Field.TermVector.YES : Field.TermVector.NO));
@@ -280,10 +278,20 @@ public class DoIndexServiceImpl implements IDoIndexService {
     }
 
     @AutoreleasePool
+    private void buildJsonArrayDocument(Document doc,String key, boolean stored, boolean indexed, JsonElement value){
+        JsonArray array = (JsonArray) value;
+        for (@AutoreleasePool JsonElement jsonElement : array) {
+            doc.add(new Field(key, jsonElement.getAsString(), stored ? Field.Store.YES : Field.Store.NO,
+                    indexed ? Field.Index.ANALYZED : Field.Index.NO, indexed ? Field.TermVector.YES : Field.TermVector.NO));
+        }
+        array = null;
+    }
+
+    @AutoreleasePool
     private PerFieldAnalyzerWrapper getPerFieldAnalyzerWrapper(String subPath) {
         String preName = "index.field." + subPath + ".";
         Map<String, Analyzer> analyzerPerField = new HashMap<String, Analyzer>();
-        for (Map.Entry<String, String> entry : this.fieldsConfigs.entrySet()) {
+        for (@AutoreleasePool Map.Entry<String, String> entry : this.fieldsConfigs.entrySet()) {
             if (entry.getKey().indexOf(preName) == 0
                     && Boolean.parseBoolean(this.getSplitValue(entry.getValue(), "indexed"))) {
                 String type = this.getSplitValue(entry.getValue(), "type");
@@ -301,7 +309,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
             String[] subValues = multipleValues.split(";");
             if (subValues != null && subValues.length > 0) {
                 String[] subSubValues = null;
-                for (String subValue : subValues) {
+                for (@AutoreleasePool String subValue : subValues) {
                     subSubValues = subValue.split(":");
                     if (key.equalsIgnoreCase(subSubValues[0])) {
                         return subSubValues[1];
@@ -314,23 +322,22 @@ public class DoIndexServiceImpl implements IDoIndexService {
 
     @AutoreleasePool
     private Analyzer getAnalyzer(String type) {
-        Analyzer analyzer = null;
         if ("string".equalsIgnoreCase(type)) {
-            analyzer = this.keywordAnalyzer;
+            return this.keywordAnalyzer;
         } else if ("text_general".equalsIgnoreCase(type)) {
-            analyzer = this.FTS_TextGeneral_Analyzer;
+            return this.FTS_TextGeneral_Analyzer;
         } else if ("text_general_keyword".equalsIgnoreCase(type)) {
-            analyzer = FTS_TextGeneralKeyword_Analyzer;
+            return FTS_TextGeneralKeyword_Analyzer;
         } else if ("text_general_html".equalsIgnoreCase(type)) {
-            analyzer = FTS_TextGeneralHTML_Analyzer;
+            return FTS_TextGeneralHTML_Analyzer;
         } else if ("text_general_html_without_replace_filter".equalsIgnoreCase(type)) {
-            analyzer = FF_TextGeneralHTML_Analyzer;
+            return FF_TextGeneralHTML_Analyzer;
         }else if ("text_general_fin".equalsIgnoreCase(type)) {
-            analyzer = FTS_TextGeneralFIN_Analyzer;
+            return FTS_TextGeneralFIN_Analyzer;
         } else if ("text_hyphn".equalsIgnoreCase(type)) {
-            analyzer = FTS_TextHyphn_Analyzer;
+            return FTS_TextHyphn_Analyzer;
         }
-        return analyzer;
+        return this.keywordAnalyzer;
     }
 
     class FTS_TextGeneral_Analyzer extends Analyzer {

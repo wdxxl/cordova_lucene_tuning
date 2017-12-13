@@ -20,6 +20,7 @@
 #include "java/io/Reader.h"
 #include "java/lang/Boolean.h"
 #include "java/lang/Exception.h"
+#include "java/lang/System.h"
 #include "java/util/ArrayList.h"
 #include "java/util/Collections.h"
 #include "java/util/Comparator.h"
@@ -97,13 +98,19 @@ withOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
 
 - (void)buildDocumentWithOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
                                             withNSString:(NSString *)subPath
-                                          withJavaIoFile:(JavaIoFile *)indexFile;
+                                            withNSString:(NSString *)indexFile;
 
 - (void)deleteDocumentByQueryWithOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer;
 
 - (NSString *)buildDocumentWithNSString:(NSString *)subPath
     withOrgApacheLuceneDocumentDocument:(OrgApacheLuceneDocumentDocument *)doc
             withComGoogleGsonJsonObject:(ComGoogleGsonJsonObject *)jsonObj;
+
+- (void)buildJsonArrayDocumentWithOrgApacheLuceneDocumentDocument:(OrgApacheLuceneDocumentDocument *)doc
+                                                     withNSString:(NSString *)key
+                                                      withBoolean:(jboolean)stored
+                                                      withBoolean:(jboolean)indexed
+                                     withComGoogleGsonJsonElement:(ComGoogleGsonJsonElement *)value;
 
 - (OrgApacheLuceneAnalysisPerFieldAnalyzerWrapper *)getPerFieldAnalyzerWrapperWithNSString:(NSString *)subPath;
 
@@ -144,11 +151,13 @@ __attribute__((unused)) static void ComFlatironsPpmobSyncIndexImplDoIndexService
 
 __attribute__((unused)) static void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_createIndexWithJavaUtilList_withOrgApacheLuceneIndexIndexWriter_withNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, id<JavaUtilList> originalIndexFiles, OrgApacheLuceneIndexIndexWriter *writer, NSString *subPath);
 
-__attribute__((unused)) static void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withJavaIoFile_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, OrgApacheLuceneIndexIndexWriter *writer, NSString *subPath, JavaIoFile *indexFile);
+__attribute__((unused)) static void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, OrgApacheLuceneIndexIndexWriter *writer, NSString *subPath, NSString *indexFile);
 
 __attribute__((unused)) static void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_deleteDocumentByQueryWithOrgApacheLuceneIndexIndexWriter_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, OrgApacheLuceneIndexIndexWriter *writer);
 
 __attribute__((unused)) static NSString *ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithNSString_withOrgApacheLuceneDocumentDocument_withComGoogleGsonJsonObject_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, NSString *subPath, OrgApacheLuceneDocumentDocument *doc, ComGoogleGsonJsonObject *jsonObj);
+
+__attribute__((unused)) static void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildJsonArrayDocumentWithOrgApacheLuceneDocumentDocument_withNSString_withBoolean_withBoolean_withComGoogleGsonJsonElement_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, OrgApacheLuceneDocumentDocument *doc, NSString *key, jboolean stored, jboolean indexed, ComGoogleGsonJsonElement *value);
 
 __attribute__((unused)) static OrgApacheLuceneAnalysisPerFieldAnalyzerWrapper *ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getPerFieldAnalyzerWrapperWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, NSString *subPath);
 
@@ -160,8 +169,8 @@ __attribute__((unused)) static OrgApacheLuceneAnalysisAnalyzer *ComFlatironsPpmo
 
 - (instancetype)init;
 
-- (jint)compareWithId:(JavaIoFile *)o1
-               withId:(JavaIoFile *)o2;
+- (jint)compareWithId:(NSString *)o1
+               withId:(NSString *)o2;
 
 @end
 
@@ -280,8 +289,8 @@ withOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
 
 - (void)buildDocumentWithOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
                                             withNSString:(NSString *)subPath
-                                          withJavaIoFile:(JavaIoFile *)indexFile {
-  ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withJavaIoFile_(self, writer, subPath, indexFile);
+                                            withNSString:(NSString *)indexFile {
+  ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withNSString_(self, writer, subPath, indexFile);
 }
 
 - (void)deleteDocumentByQueryWithOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer {
@@ -292,6 +301,14 @@ withOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
     withOrgApacheLuceneDocumentDocument:(OrgApacheLuceneDocumentDocument *)doc
             withComGoogleGsonJsonObject:(ComGoogleGsonJsonObject *)jsonObj {
   return ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithNSString_withOrgApacheLuceneDocumentDocument_withComGoogleGsonJsonObject_(self, subPath, doc, jsonObj);
+}
+
+- (void)buildJsonArrayDocumentWithOrgApacheLuceneDocumentDocument:(OrgApacheLuceneDocumentDocument *)doc
+                                                     withNSString:(NSString *)key
+                                                      withBoolean:(jboolean)stored
+                                                      withBoolean:(jboolean)indexed
+                                     withComGoogleGsonJsonElement:(ComGoogleGsonJsonElement *)value {
+  ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildJsonArrayDocumentWithOrgApacheLuceneDocumentDocument_withNSString_withBoolean_withBoolean_withComGoogleGsonJsonElement_(self, doc, key, stored, indexed, value);
 }
 
 - (OrgApacheLuceneAnalysisPerFieldAnalyzerWrapper *)getPerFieldAnalyzerWrapperWithNSString:(NSString *)subPath {
@@ -319,9 +336,10 @@ withOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
     { NULL, "V", 0x2, 13, 14, 2, -1, -1, -1 },
     { NULL, "V", 0x2, 15, 16, 17, -1, -1, -1 },
     { NULL, "LNSString;", 0x2, 13, 18, -1, -1, -1, -1 },
-    { NULL, "LOrgApacheLuceneAnalysisPerFieldAnalyzerWrapper;", 0x2, 19, 5, -1, -1, -1, -1 },
-    { NULL, "LNSString;", 0x2, 20, 21, -1, -1, -1, -1 },
-    { NULL, "LOrgApacheLuceneAnalysisAnalyzer;", 0x2, 22, 5, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 19, 20, -1, -1, -1, -1 },
+    { NULL, "LOrgApacheLuceneAnalysisPerFieldAnalyzerWrapper;", 0x2, 21, 5, -1, -1, -1, -1 },
+    { NULL, "LNSString;", 0x2, 22, 23, -1, -1, -1, -1 },
+    { NULL, "LOrgApacheLuceneAnalysisAnalyzer;", 0x2, 24, 5, -1, -1, -1, -1 },
   };
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
@@ -332,12 +350,13 @@ withOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
   methods[4].selector = @selector(getOriginalIndexFilesWithNSString:);
   methods[5].selector = @selector(processEachFolderWithNSString:withJavaUtilList:);
   methods[6].selector = @selector(createIndexWithJavaUtilList:withOrgApacheLuceneIndexIndexWriter:withNSString:);
-  methods[7].selector = @selector(buildDocumentWithOrgApacheLuceneIndexIndexWriter:withNSString:withJavaIoFile:);
+  methods[7].selector = @selector(buildDocumentWithOrgApacheLuceneIndexIndexWriter:withNSString:withNSString:);
   methods[8].selector = @selector(deleteDocumentByQueryWithOrgApacheLuceneIndexIndexWriter:);
   methods[9].selector = @selector(buildDocumentWithNSString:withOrgApacheLuceneDocumentDocument:withComGoogleGsonJsonObject:);
-  methods[10].selector = @selector(getPerFieldAnalyzerWrapperWithNSString:);
-  methods[11].selector = @selector(getSplitValueWithNSString:withNSString:);
-  methods[12].selector = @selector(getAnalyzerWithNSString:);
+  methods[10].selector = @selector(buildJsonArrayDocumentWithOrgApacheLuceneDocumentDocument:withNSString:withBoolean:withBoolean:withComGoogleGsonJsonElement:);
+  methods[11].selector = @selector(getPerFieldAnalyzerWrapperWithNSString:);
+  methods[12].selector = @selector(getSplitValueWithNSString:withNSString:);
+  methods[13].selector = @selector(getAnalyzerWithNSString:);
   #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
     { "size_", "I", .constantValue.asLong = 0, 0x0, -1, -1, -1, -1 },
@@ -346,9 +365,9 @@ withOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
     { "callbackService_", "LComFlatironsPpmobCommonCallbackICallbackService;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "basicFilesPath_", "LJavaIoFile;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "indexPath_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "indexSubPaths_", "LJavaUtilList;", .constantValue.asLong = 0, 0x2, -1, -1, 23, -1 },
+    { "indexSubPaths_", "LJavaUtilList;", .constantValue.asLong = 0, 0x2, -1, -1, 25, -1 },
     { "status_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "fieldsConfigs_", "LJavaUtilMap;", .constantValue.asLong = 0, 0x2, -1, -1, 24, -1 },
+    { "fieldsConfigs_", "LJavaUtilMap;", .constantValue.asLong = 0, 0x2, -1, -1, 26, -1 },
     { "unzipIndexPath_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "folderName_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "libraryId_", "LNSString;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
@@ -361,8 +380,8 @@ withOrgApacheLuceneIndexIndexWriter:(OrgApacheLuceneIndexIndexWriter *)writer
     { "FTS_TextHyphn_Analyzer_", "LOrgApacheLuceneAnalysisAnalyzer;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "FF_TextGeneralHTML_Analyzer_", "LOrgApacheLuceneAnalysisAnalyzer;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
   };
-  static const void *ptrTable[] = { "process", "LJavaIoFile;LNSString;LNSString;LNSString;LJavaUtilList;LJavaUtilMap;LJavaUtilMap;LNSString;LNSString;LNSString;", "LJavaLangException;", "(Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List<Ljava/lang/String;>;Ljava/util/Map<Lcom/flatirons/ppmob/common/ServiceCategory;Lcom/flatirons/ppmob/common/ICommonService;>;Ljava/util/Map<Ljava/lang/String;Ljava/lang/String;>;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", "getOriginalIndexFiles", "LNSString;", "(Ljava/lang/String;)Ljava/util/List<Ljava/io/File;>;", "processEachFolder", "LNSString;LJavaUtilList;", "(Ljava/lang/String;Ljava/util/List<Ljava/io/File;>;)V", "createIndex", "LJavaUtilList;LOrgApacheLuceneIndexIndexWriter;LNSString;", "(Ljava/util/List<Ljava/io/File;>;Lorg/apache/lucene/index/IndexWriter;Ljava/lang/String;)V", "buildDocument", "LOrgApacheLuceneIndexIndexWriter;LNSString;LJavaIoFile;", "deleteDocumentByQuery", "LOrgApacheLuceneIndexIndexWriter;", "LJavaIoIOException;", "LNSString;LOrgApacheLuceneDocumentDocument;LComGoogleGsonJsonObject;", "getPerFieldAnalyzerWrapper", "getSplitValue", "LNSString;LNSString;", "getAnalyzer", "Ljava/util/List<Ljava/lang/String;>;", "Ljava/util/Map<Ljava/lang/String;Ljava/lang/String;>;", "LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneral_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneralHTML_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FF_TextGeneralHTML_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneralFIN_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneralKeyword_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextHyphn_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FISPatternReplaceFilter;" };
-  static const J2ObjcClassInfo _ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl = { "DoIndexServiceImpl", "com.flatirons.ppmob.sync.index.impl", ptrTable, methods, fields, 7, 0x1, 13, 20, -1, 25, -1, -1, -1 };
+  static const void *ptrTable[] = { "process", "LJavaIoFile;LNSString;LNSString;LNSString;LJavaUtilList;LJavaUtilMap;LJavaUtilMap;LNSString;LNSString;LNSString;", "LJavaLangException;", "(Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List<Ljava/lang/String;>;Ljava/util/Map<Lcom/flatirons/ppmob/common/ServiceCategory;Lcom/flatirons/ppmob/common/ICommonService;>;Ljava/util/Map<Ljava/lang/String;Ljava/lang/String;>;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", "getOriginalIndexFiles", "LNSString;", "(Ljava/lang/String;)Ljava/util/List<Ljava/lang/String;>;", "processEachFolder", "LNSString;LJavaUtilList;", "(Ljava/lang/String;Ljava/util/List<Ljava/lang/String;>;)V", "createIndex", "LJavaUtilList;LOrgApacheLuceneIndexIndexWriter;LNSString;", "(Ljava/util/List<Ljava/lang/String;>;Lorg/apache/lucene/index/IndexWriter;Ljava/lang/String;)V", "buildDocument", "LOrgApacheLuceneIndexIndexWriter;LNSString;LNSString;", "deleteDocumentByQuery", "LOrgApacheLuceneIndexIndexWriter;", "LJavaIoIOException;", "LNSString;LOrgApacheLuceneDocumentDocument;LComGoogleGsonJsonObject;", "buildJsonArrayDocument", "LOrgApacheLuceneDocumentDocument;LNSString;ZZLComGoogleGsonJsonElement;", "getPerFieldAnalyzerWrapper", "getSplitValue", "LNSString;LNSString;", "getAnalyzer", "Ljava/util/List<Ljava/lang/String;>;", "Ljava/util/Map<Ljava/lang/String;Ljava/lang/String;>;", "LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneral_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneralHTML_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FF_TextGeneralHTML_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneralFIN_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextGeneralKeyword_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FTS_TextHyphn_Analyzer;LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_FISPatternReplaceFilter;" };
+  static const J2ObjcClassInfo _ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl = { "DoIndexServiceImpl", "com.flatirons.ppmob.sync.index.impl", ptrTable, methods, fields, 7, 0x1, 14, 20, -1, 27, -1, -1, -1 };
   return &_ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl;
 }
 
@@ -410,9 +429,11 @@ void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_processAllFolders(ComFlati
     @try {
       [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$", self->folderName_, @" -- Start creating index...")];
       for (NSString * __strong subPath in nil_chk(self->indexSubPaths_)) {
-        id<JavaUtilList> originalIndexFiles = ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getOriginalIndexFilesWithNSString_(self, subPath);
-        [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$$$I", self->folderName_, @" -- Start creating index for path: ", subPath, @", total index files: ", [((id<JavaUtilList>) nil_chk(originalIndexFiles)) size])];
-        ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_processEachFolderWithNSString_withJavaUtilList_(self, subPath, originalIndexFiles);
+        @autoreleasepool {
+          id<JavaUtilList> originalIndexFiles = ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getOriginalIndexFilesWithNSString_(self, subPath);
+          [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$$$I", self->folderName_, @" -- Start creating index for path: ", subPath, @", total index files: ", [((id<JavaUtilList>) nil_chk(originalIndexFiles)) size])];
+          ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_processEachFolderWithNSString_withJavaUtilList_(self, subPath, originalIndexFiles);
+        }
       }
       [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$", self->folderName_, @" -- Finish creating index...")];
     }
@@ -434,7 +455,7 @@ id<JavaUtilList> ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getOriginalInd
         while (b__ < e__) {
           JavaIoFile *file = *b__++;
           if ([((JavaIoFile *) nil_chk(file)) isFile]) {
-            [returnList addWithId:file];
+            [returnList addWithId:[file getAbsolutePath]];
           }
         }
       }
@@ -470,55 +491,61 @@ void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_processEachFolderWithNSStr
       [((OrgApacheLuceneStoreDirectory *) nil_chk(directory)) close];
       writer = nil;
       directory = nil;
+      JavaLangSystem_gc();
     }
   }
 }
 
 void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_createIndexWithJavaUtilList_withOrgApacheLuceneIndexIndexWriter_withNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, id<JavaUtilList> originalIndexFiles, OrgApacheLuceneIndexIndexWriter *writer, NSString *subPath) {
-  jint currentNumber = 0;
-  jlong totalIndexTime = 0;
-  jint totalIndexFiles = [((id<JavaUtilList>) nil_chk(originalIndexFiles)) size];
-  for (JavaIoFile * __strong indexFile in originalIndexFiles) {
-    if ([((JavaIoFile *) nil_chk(indexFile)) exists] && [indexFile isFile]) {
-      @try {
-        jlong startTime = [new_JavaUtilDate_init() getTime];
-        ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withJavaIoFile_(self, writer, subPath, indexFile);
-        totalIndexTime += ([new_JavaUtilDate_init() getTime] - startTime);
-        currentNumber++;
-        if ((currentNumber >= self->size_ && currentNumber % self->size_ == 0) || currentNumber >= totalIndexFiles) {
-          [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$I$J$", self->folderName_, @" -- Create ", currentNumber, @" index successfully. Cost time: ", totalIndexTime, @"ms.")];
-          [((id<ComFlatironsPpmobCommonCallbackICallbackService>) nil_chk(self->callbackService_)) processOKCallbackWithNSString:self->status_ withNSString:@"Do Indexing..." withLong:(currentNumber * 100) / totalIndexFiles];
-          startTime = 0;
-          totalIndexTime = 0;
+  @autoreleasepool {
+    jint currentNumber = 0;
+    jlong totalIndexTime = 0;
+    jint totalIndexFiles = [((id<JavaUtilList>) nil_chk(originalIndexFiles)) size];
+    for (NSString * __strong indexFile in originalIndexFiles) {
+      @autoreleasepool {
+        JavaIoFile *tempFile = new_JavaIoFile_initWithNSString_(indexFile);
+        if ([tempFile exists] && [tempFile isFile]) {
+          @try {
+            jlong startTime = [new_JavaUtilDate_init() getTime];
+            ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withNSString_(self, writer, subPath, indexFile);
+            totalIndexTime += ([new_JavaUtilDate_init() getTime] - startTime);
+            currentNumber++;
+            if ((currentNumber >= self->size_ && currentNumber % self->size_ == 0) || currentNumber >= totalIndexFiles) {
+              [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$I$J$", self->folderName_, @" -- Create ", currentNumber, @" index successfully. Cost time: ", totalIndexTime, @"ms.")];
+              [((id<ComFlatironsPpmobCommonCallbackICallbackService>) nil_chk(self->callbackService_)) processOKCallbackWithNSString:self->status_ withNSString:@"Do Indexing..." withLong:(currentNumber * 100) / totalIndexFiles];
+              startTime = 0;
+              totalIndexTime = 0;
+            }
+          }
+          @catch (JavaLangException *e) {
+            [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:@"There is something wrong during crate index." withJavaLangException:e];
+            @throw e;
+          }
+        }
+        else {
+          JavaLangException *e = new_JavaLangException_initWithNSString_(JreStrcat("$$", @"There is no index file for path:", indexFile));
+          [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithJavaLangException:e];
+          @throw e;
         }
       }
-      @catch (JavaLangException *e) {
-        [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:@"There is something wrong during crate index." withJavaLangException:e];
-        @throw e;
-      }
-    }
-    else {
-      JavaLangException *e = new_JavaLangException_initWithNSString_(JreStrcat("$$", @"There is no index file for path:", [indexFile getAbsolutePath]));
-      [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithJavaLangException:e];
-      @throw e;
     }
   }
 }
 
-void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withJavaIoFile_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, OrgApacheLuceneIndexIndexWriter *writer, NSString *subPath, JavaIoFile *indexFile) {
+void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithOrgApacheLuceneIndexIndexWriter_withNSString_withNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, OrgApacheLuceneIndexIndexWriter *writer, NSString *subPath, NSString *indexFile) {
   @autoreleasepool {
     NSString *jsonFromFile = @"";
     NSString *key = @"";
     @try {
       OrgApacheLuceneDocumentDocument *doc = new_OrgApacheLuceneDocumentDocument_init();
-      jsonFromFile = [((id<ComFlatironsPpmobCommonFileIFileService>) nil_chk(self->fileService_)) getFileContentWithJavaIoFile:indexFile];
+      jsonFromFile = [((id<ComFlatironsPpmobCommonFileIFileService>) nil_chk(self->fileService_)) getFileContentWithNSString:indexFile];
       ComGoogleGsonJsonObject *jsonObj = [((ComGoogleGsonJsonElement *) nil_chk([new_ComGoogleGsonJsonParser_init() parseWithNSString:jsonFromFile])) getAsJsonObject];
       key = ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithNSString_withOrgApacheLuceneDocumentDocument_withComGoogleGsonJsonObject_(self, subPath, doc, jsonObj);
       [((OrgApacheLuceneIndexIndexWriter *) nil_chk(writer)) updateDocumentWithOrgApacheLuceneIndexTerm:new_OrgApacheLuceneIndexTerm_initWithNSString_withNSString_(@"id", [doc getWithNSString:@"id"]) withOrgApacheLuceneDocumentDocument:doc];
       jsonObj = nil;
     }
     @catch (JavaLangException *e) {
-      [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$$$", @"There is something wrong during build document. Path: ", [((JavaIoFile *) nil_chk(indexFile)) getAbsolutePath], @", Key: ", key)];
+      [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$$$", @"There is something wrong during build document. Path: ", indexFile, @", Key: ", key)];
       [((id<ComFlatironsPpmobCommonLogILogService>) nil_chk(self->logService_)) logWithNSString:JreStrcat("$$", @"JSON String: ", jsonFromFile)];
       @throw e;
     }
@@ -541,35 +568,47 @@ NSString *ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildDocumentWithNSSt
   ComGoogleGsonJsonElement *value = nil;
   NSString *key = @"";
   for (id<JavaUtilMap_Entry> __strong entry_ in nil_chk([((ComGoogleGsonJsonObject *) nil_chk(jsonObj)) entrySet])) {
-    key = [((id<JavaUtilMap_Entry>) nil_chk(entry_)) getKey];
-    configValue = [((id<JavaUtilMap>) nil_chk(self->fieldsConfigs_)) getWithId:JreStrcat("$$C$", @"index.field.", subPath, '.', key)];
-    value = [jsonObj getWithNSString:key];
-    if (value != nil) {
-      jboolean stored = JavaLangBoolean_parseBooleanWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, configValue, @"stored"));
-      jboolean indexed = JavaLangBoolean_parseBooleanWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, configValue, @"indexed"));
-      if ([value isKindOfClass:[ComGoogleGsonJsonArray class]]) {
-        ComGoogleGsonJsonArray *array = (ComGoogleGsonJsonArray *) cast_chk(value, [ComGoogleGsonJsonArray class]);
-        for (ComGoogleGsonJsonElement * __strong jsonElement in array) {
-          [((OrgApacheLuceneDocumentDocument *) nil_chk(doc)) addWithOrgApacheLuceneDocumentFieldable:new_OrgApacheLuceneDocumentField_initWithNSString_withNSString_withOrgApacheLuceneDocumentField_Store_withOrgApacheLuceneDocumentField_Index_withOrgApacheLuceneDocumentField_TermVector_(key, [((ComGoogleGsonJsonElement *) nil_chk(jsonElement)) getAsString], stored ? JreLoadEnum(OrgApacheLuceneDocumentField_Store, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_Store, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_Index, ANALYZED) : JreLoadEnum(OrgApacheLuceneDocumentField_Index, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, NO))];
+    @autoreleasepool {
+      key = [((id<JavaUtilMap_Entry>) nil_chk(entry_)) getKey];
+      configValue = [((id<JavaUtilMap>) nil_chk(self->fieldsConfigs_)) getWithId:JreStrcat("$$C$", @"index.field.", subPath, '.', key)];
+      value = [jsonObj getWithNSString:key];
+      if (value != nil) {
+        jboolean stored = JavaLangBoolean_parseBooleanWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, configValue, @"stored"));
+        jboolean indexed = JavaLangBoolean_parseBooleanWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, configValue, @"indexed"));
+        if ([value isKindOfClass:[ComGoogleGsonJsonArray class]]) {
+          ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildJsonArrayDocumentWithOrgApacheLuceneDocumentDocument_withNSString_withBoolean_withBoolean_withComGoogleGsonJsonElement_(self, doc, key, stored, indexed, value);
         }
-        array = nil;
+        else {
+          [((OrgApacheLuceneDocumentDocument *) nil_chk(doc)) addWithOrgApacheLuceneDocumentFieldable:new_OrgApacheLuceneDocumentField_initWithNSString_withNSString_withOrgApacheLuceneDocumentField_Store_withOrgApacheLuceneDocumentField_Index_withOrgApacheLuceneDocumentField_TermVector_(key, [value getAsString], stored ? JreLoadEnum(OrgApacheLuceneDocumentField_Store, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_Store, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_Index, ANALYZED) : JreLoadEnum(OrgApacheLuceneDocumentField_Index, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, NO))];
+        }
+        value = nil;
       }
-      else {
-        [((OrgApacheLuceneDocumentDocument *) nil_chk(doc)) addWithOrgApacheLuceneDocumentFieldable:new_OrgApacheLuceneDocumentField_initWithNSString_withNSString_withOrgApacheLuceneDocumentField_Store_withOrgApacheLuceneDocumentField_Index_withOrgApacheLuceneDocumentField_TermVector_(key, [value getAsString], stored ? JreLoadEnum(OrgApacheLuceneDocumentField_Store, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_Store, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_Index, ANALYZED) : JreLoadEnum(OrgApacheLuceneDocumentField_Index, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, NO))];
-      }
-      value = nil;
     }
   }
   return key;
+}
+
+void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_buildJsonArrayDocumentWithOrgApacheLuceneDocumentDocument_withNSString_withBoolean_withBoolean_withComGoogleGsonJsonElement_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, OrgApacheLuceneDocumentDocument *doc, NSString *key, jboolean stored, jboolean indexed, ComGoogleGsonJsonElement *value) {
+  @autoreleasepool {
+    ComGoogleGsonJsonArray *array = (ComGoogleGsonJsonArray *) cast_chk(value, [ComGoogleGsonJsonArray class]);
+    for (ComGoogleGsonJsonElement * __strong jsonElement in nil_chk(array)) {
+      @autoreleasepool {
+        [((OrgApacheLuceneDocumentDocument *) nil_chk(doc)) addWithOrgApacheLuceneDocumentFieldable:new_OrgApacheLuceneDocumentField_initWithNSString_withNSString_withOrgApacheLuceneDocumentField_Store_withOrgApacheLuceneDocumentField_Index_withOrgApacheLuceneDocumentField_TermVector_(key, [((ComGoogleGsonJsonElement *) nil_chk(jsonElement)) getAsString], stored ? JreLoadEnum(OrgApacheLuceneDocumentField_Store, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_Store, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_Index, ANALYZED) : JreLoadEnum(OrgApacheLuceneDocumentField_Index, NO), indexed ? JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, YES) : JreLoadEnum(OrgApacheLuceneDocumentField_TermVector, NO))];
+      }
+    }
+    array = nil;
+  }
 }
 
 OrgApacheLuceneAnalysisPerFieldAnalyzerWrapper *ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getPerFieldAnalyzerWrapperWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, NSString *subPath) {
   NSString *preName = JreStrcat("$$C", @"index.field.", subPath, '.');
   id<JavaUtilMap> analyzerPerField = new_JavaUtilHashMap_init();
   for (id<JavaUtilMap_Entry> __strong entry_ in nil_chk([((id<JavaUtilMap>) nil_chk(self->fieldsConfigs_)) entrySet])) {
-    if ([((NSString *) nil_chk([((id<JavaUtilMap_Entry>) nil_chk(entry_)) getKey])) java_indexOfString:preName] == 0 && JavaLangBoolean_parseBooleanWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, [entry_ getValue], @"indexed"))) {
-      NSString *type = ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, [entry_ getValue], @"type");
-      (void) [analyzerPerField putWithId:[((NSString *) nil_chk([entry_ getKey])) java_replace:preName withSequence:@""] withId:ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getAnalyzerWithNSString_(self, type)];
+    @autoreleasepool {
+      if ([((NSString *) nil_chk([((id<JavaUtilMap_Entry>) nil_chk(entry_)) getKey])) java_indexOfString:preName] == 0 && JavaLangBoolean_parseBooleanWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, [entry_ getValue], @"indexed"))) {
+        NSString *type = ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSString_withNSString_(self, [entry_ getValue], @"type");
+        (void) [analyzerPerField putWithId:[((NSString *) nil_chk([entry_ getKey])) java_replace:preName withSequence:@""] withId:ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getAnalyzerWithNSString_(self, type)];
+      }
     }
   }
   OrgApacheLuceneAnalysisPerFieldAnalyzerWrapper *analyzer = new_OrgApacheLuceneAnalysisPerFieldAnalyzerWrapper_initWithOrgApacheLuceneAnalysisAnalyzer_withJavaUtilMap_(new_OrgApacheLuceneAnalysisStandardStandardAnalyzer_initWithOrgApacheLuceneUtilVersion_(JreLoadEnum(OrgApacheLuceneUtilVersion, LUCENE_35)), analyzerPerField);
@@ -586,10 +625,12 @@ NSString *ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSSt
         NSString * const *b__ = a__->buffer_;
         NSString * const *e__ = b__ + a__->size_;
         while (b__ < e__) {
-          NSString *subValue = *b__++;
-          subSubValues = [((NSString *) nil_chk(subValue)) java_split:@":"];
-          if ([key java_equalsIgnoreCase:IOSObjectArray_Get(nil_chk(subSubValues), 0)]) {
-            return IOSObjectArray_Get(subSubValues, 1);
+          @autoreleasepool {
+            NSString *subValue = *b__++;
+            subSubValues = [((NSString *) nil_chk(subValue)) java_split:@":"];
+            if ([key java_equalsIgnoreCase:IOSObjectArray_Get(nil_chk(subSubValues), 0)]) {
+              return IOSObjectArray_Get(subSubValues, 1);
+            }
           }
         }
       }
@@ -599,29 +640,28 @@ NSString *ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getSplitValueWithNSSt
 }
 
 OrgApacheLuceneAnalysisAnalyzer *ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getAnalyzerWithNSString_(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self, NSString *type) {
-  OrgApacheLuceneAnalysisAnalyzer *analyzer = nil;
   if ([@"string" java_equalsIgnoreCase:type]) {
-    analyzer = self->keywordAnalyzer_;
+    return self->keywordAnalyzer_;
   }
   else if ([@"text_general" java_equalsIgnoreCase:type]) {
-    analyzer = self->FTS_TextGeneral_Analyzer_;
+    return self->FTS_TextGeneral_Analyzer_;
   }
   else if ([@"text_general_keyword" java_equalsIgnoreCase:type]) {
-    analyzer = self->FTS_TextGeneralKeyword_Analyzer_;
+    return self->FTS_TextGeneralKeyword_Analyzer_;
   }
   else if ([@"text_general_html" java_equalsIgnoreCase:type]) {
-    analyzer = self->FTS_TextGeneralHTML_Analyzer_;
+    return self->FTS_TextGeneralHTML_Analyzer_;
   }
   else if ([@"text_general_html_without_replace_filter" java_equalsIgnoreCase:type]) {
-    analyzer = self->FF_TextGeneralHTML_Analyzer_;
+    return self->FF_TextGeneralHTML_Analyzer_;
   }
   else if ([@"text_general_fin" java_equalsIgnoreCase:type]) {
-    analyzer = self->FTS_TextGeneralFIN_Analyzer_;
+    return self->FTS_TextGeneralFIN_Analyzer_;
   }
   else if ([@"text_hyphn" java_equalsIgnoreCase:type]) {
-    analyzer = self->FTS_TextHyphn_Analyzer_;
+    return self->FTS_TextHyphn_Analyzer_;
   }
-  return analyzer;
+  return self->keywordAnalyzer_;
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl)
@@ -635,9 +675,9 @@ J2OBJC_IGNORE_DESIGNATED_BEGIN
 }
 J2OBJC_IGNORE_DESIGNATED_END
 
-- (jint)compareWithId:(JavaIoFile *)o1
-               withId:(JavaIoFile *)o2 {
-  return [((NSString *) nil_chk([((JavaIoFile *) nil_chk(o2)) getName])) compareToWithId:[((JavaIoFile *) nil_chk(o1)) getName]];
+- (jint)compareWithId:(NSString *)o1
+               withId:(NSString *)o2 {
+  return [((NSString *) nil_chk(o2)) compareToWithId:o1];
 }
 
 - (id<JavaUtilComparator>)reversed {
@@ -679,7 +719,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   methods[0].selector = @selector(init);
   methods[1].selector = @selector(compareWithId:withId:);
   #pragma clang diagnostic pop
-  static const void *ptrTable[] = { "compare", "LJavaIoFile;LJavaIoFile;", "LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl;", "getOriginalIndexFilesWithNSString:", "Ljava/lang/Object;Ljava/util/Comparator<Ljava/io/File;>;" };
+  static const void *ptrTable[] = { "compare", "LNSString;LNSString;", "LComFlatironsPpmobSyncIndexImplDoIndexServiceImpl;", "getOriginalIndexFilesWithNSString:", "Ljava/lang/Object;Ljava/util/Comparator<Ljava/lang/String;>;" };
   static const J2ObjcClassInfo _ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_1 = { "", "com.flatirons.ppmob.sync.index.impl", ptrTable, methods, NULL, 7, 0x8018, 2, 0, 2, -1, 3, 4, -1 };
   return &_ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_1;
 }
