@@ -165,17 +165,18 @@
 
 
     @try {
-        [doServiceImpl processWithJavaIoFile:paramBasicFilesPath
-                                withNSString:_indexPath
-                                withNSString:_extractPath
-                                withNSString:_folderName
-                            withJavaUtilList:paramIndexSubPaths
-                             withJavaUtilMap:paramCommonServices
-                             withJavaUtilMap:paramFieldsConfigs
-                                withNSString:@"0800"
-                                withNSString:@"_libId"
-                                withNSString:@"_pubId"];
-
+        @autoreleasepool {
+            [doServiceImpl processWithJavaIoFile:paramBasicFilesPath
+                                    withNSString:_indexPath
+                                    withNSString:_extractPath
+                                    withNSString:_folderName
+                                withJavaUtilList:paramIndexSubPaths
+                                 withJavaUtilMap:paramCommonServices
+                                 withJavaUtilMap:paramFieldsConfigs
+                                    withNSString:@"0800"
+                                    withNSString:@"_libId"
+                                    withNSString:@"_pubId"];
+        }
 
     } @catch (NSException *exception) {
         NSLog(@"Something Wrong with Java Lucene 350.");

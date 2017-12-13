@@ -24,7 +24,10 @@
 @protocol JavaUtilList;
 @protocol JavaUtilMap;
 
-@interface ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl : NSObject < ComFlatironsPpmobSyncIndexIDoIndexService >
+@interface ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl : NSObject < ComFlatironsPpmobSyncIndexIDoIndexService > {
+ @public
+  jint size_;
+}
 
 #pragma mark Public
 
@@ -44,10 +47,6 @@
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl)
-
-inline jint ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_get_size();
-#define ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_size 100
-J2OBJC_STATIC_FIELD_CONSTANT(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl, size, jint)
 
 FOUNDATION_EXPORT void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_init(ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *self);
 

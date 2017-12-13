@@ -56,7 +56,7 @@ import java.util.regex.Pattern;
 
 public class DoIndexServiceImpl implements IDoIndexService {
 
-    final int size = 100;
+    int size = 100;
     private ILogService logService;
     private IFileService fileService;
     private ICallbackService callbackService;
@@ -130,7 +130,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         try {
             logService.log(this.folderName + " -- Start creating index...");
             for (String subPath : this.indexSubPaths) {
-                final List<File> originalIndexFiles = this.getOriginalIndexFiles(subPath);
+                List<File> originalIndexFiles = this.getOriginalIndexFiles(subPath);
                 logService.log(this.folderName + " -- Start creating index for path: " + subPath + ", total index files: " + originalIndexFiles.size());
                 this.processEachFolder(subPath, originalIndexFiles);
             }
@@ -142,10 +142,10 @@ public class DoIndexServiceImpl implements IDoIndexService {
 
     @AutoreleasePool
     private List<File> getOriginalIndexFiles(String subPath) {
-        final File subFolder = new File(this.unzipIndexPath + File.separator + "index" + File.separator + subPath);
-        final List<File> returnList = new ArrayList<File>();
+        File subFolder = new File(this.unzipIndexPath + File.separator + "index" + File.separator + subPath);
+        List<File> returnList = new ArrayList<File>();
         if (subFolder.isDirectory() && subFolder.exists()) {
-            final File[] allFiles = subFolder.listFiles();
+            File[] allFiles = subFolder.listFiles();
             if (allFiles != null) {
                 for (File file : allFiles) {
                     if (file.isFile()) {
@@ -160,6 +160,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
                 }
             });
         }
+        subFolder = null;
         return returnList;
     }
 
@@ -168,9 +169,9 @@ public class DoIndexServiceImpl implements IDoIndexService {
         Directory directory = null;
         IndexWriter writer = null;
         try {
-            final File dir = new File(this.indexPath + File.separator + subPath);
+            File dir = new File(this.indexPath + File.separator + subPath);
             directory = FSDirectory.open(dir);
-            final PerFieldAnalyzerWrapper analyzer = this.getPerFieldAnalyzerWrapper(subPath);
+            PerFieldAnalyzerWrapper analyzer = this.getPerFieldAnalyzerWrapper(subPath);
             // Create IndexWriter
             IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_35, analyzer);
             iwc.setMaxBufferedDocs(5000);
@@ -195,7 +196,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     private void createIndex(List<File> originalIndexFiles, IndexWriter writer, String subPath) throws Exception {
         int currentNumber = 0;
         long totalIndexTime = 0;
-        final int totalIndexFiles = originalIndexFiles.size();
+        int totalIndexFiles = originalIndexFiles.size();
         for (File indexFile : originalIndexFiles) {
             if (indexFile.exists() && indexFile.isFile()) {
                 try {
@@ -226,8 +227,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         String jsonFromFile = "";
         String key = "";
         try {
-            Document doc;
-            doc = new Document();
+            Document doc = new Document();
             jsonFromFile = fileService.getFileContent(indexFile);
             JsonObject jsonObj = new JsonParser().parse(jsonFromFile).getAsJsonObject();
             key = this.buildDocument(subPath, doc, jsonObj);
@@ -260,8 +260,8 @@ public class DoIndexServiceImpl implements IDoIndexService {
             configValue = this.fieldsConfigs.get("index.field." + subPath + "." + key);
             value = jsonObj.get(key);
             if (value != null) {
-                final boolean stored = Boolean.parseBoolean(this.getSplitValue(configValue, "stored"));
-                final boolean indexed = Boolean.parseBoolean(this.getSplitValue(configValue, "indexed"));
+                boolean stored = Boolean.parseBoolean(this.getSplitValue(configValue, "stored"));
+                boolean indexed = Boolean.parseBoolean(this.getSplitValue(configValue, "indexed"));
                 if (value instanceof JsonArray) {
                     JsonArray array = (JsonArray) value;
                     for (JsonElement jsonElement : array) {
@@ -281,16 +281,16 @@ public class DoIndexServiceImpl implements IDoIndexService {
 
     @AutoreleasePool
     private PerFieldAnalyzerWrapper getPerFieldAnalyzerWrapper(String subPath) {
-        final String preName = "index.field." + subPath + ".";
-        final Map<String, Analyzer> analyzerPerField = new HashMap<String, Analyzer>();
+        String preName = "index.field." + subPath + ".";
+        Map<String, Analyzer> analyzerPerField = new HashMap<String, Analyzer>();
         for (Map.Entry<String, String> entry : this.fieldsConfigs.entrySet()) {
             if (entry.getKey().indexOf(preName) == 0
                     && Boolean.parseBoolean(this.getSplitValue(entry.getValue(), "indexed"))) {
-                final String type = this.getSplitValue(entry.getValue(), "type");
+                String type = this.getSplitValue(entry.getValue(), "type");
                 analyzerPerField.put(entry.getKey().replace(preName, ""), this.getAnalyzer(type));
             }
         }
-        final PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(
+        PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(Version.LUCENE_35), analyzerPerField);
         return analyzer;
     }
@@ -298,7 +298,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     @AutoreleasePool
     private String getSplitValue(String multipleValues, String key) {
         if (multipleValues != null && !"".equals(multipleValues.trim()) && key != null && !"".equals(key.trim())) {
-            final String[] subValues = multipleValues.split(";");
+            String[] subValues = multipleValues.split(";");
             if (subValues != null && subValues.length > 0) {
                 String[] subSubValues = null;
                 for (String subValue : subValues) {
@@ -336,7 +336,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     class FTS_TextGeneral_Analyzer extends Analyzer {
         @Override
         public TokenStream tokenStream(String s, Reader reader) {
-            final StandardTokenizer tokenizer = new StandardTokenizer(Version.LUCENE_35, reader);
+            StandardTokenizer tokenizer = new StandardTokenizer(Version.LUCENE_35, reader);
             TokenStream tokenStream = new LowerCaseFilter(Version.LUCENE_35, tokenizer);
             return tokenStream;
         }
@@ -345,7 +345,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     class FTS_TextGeneralHTML_Analyzer extends Analyzer {
         @Override
         public TokenStream tokenStream(String s, Reader reader) {
-            final WhitespaceTokenizer tokenizer = new WhitespaceTokenizer(Version.LUCENE_35, reader);
+            WhitespaceTokenizer tokenizer = new WhitespaceTokenizer(Version.LUCENE_35, reader);
             TokenStream tokenStream = new FISPatternReplaceFilter(tokenizer, Pattern.compile("[\\p{Punct}]"), "", true);
             tokenStream = new LowerCaseFilter(Version.LUCENE_35, tokenizer);
             return tokenStream;
@@ -355,7 +355,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     class FF_TextGeneralHTML_Analyzer extends Analyzer {
         @Override
         public TokenStream tokenStream(String s, Reader reader) {
-            final KeywordTokenizer tokenizer = new KeywordTokenizer(reader);
+            KeywordTokenizer tokenizer = new KeywordTokenizer(reader);
             TokenStream tokenStream = new LowerCaseFilter(Version.LUCENE_35, tokenizer);
             return tokenStream;
         }
@@ -364,7 +364,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     class FTS_TextGeneralFIN_Analyzer extends Analyzer {
         @Override
         public TokenStream tokenStream(String s, Reader reader) {
-            final WhitespaceTokenizer tokenizer = new WhitespaceTokenizer(Version.LUCENE_35, reader);
+            WhitespaceTokenizer tokenizer = new WhitespaceTokenizer(Version.LUCENE_35, reader);
             TokenStream tokenStream = new FISPatternReplaceFilter(tokenizer, Pattern.compile("\\|.*\\|"), "", true);
             tokenStream = new FISPatternReplaceFilter(tokenizer, Pattern.compile("[\\p{Punct}]"), "", true);
             tokenStream = new LowerCaseFilter(Version.LUCENE_35, tokenizer);
@@ -375,7 +375,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     class FTS_TextGeneralKeyword_Analyzer extends Analyzer {
         @Override
         public TokenStream tokenStream(String s, Reader reader) {
-            final KeywordTokenizer tokenizer = new KeywordTokenizer(reader);
+            KeywordTokenizer tokenizer = new KeywordTokenizer(reader);
             TokenStream tokenStream = new LowerCaseFilter(Version.LUCENE_35, tokenizer);
             return tokenStream;
         }
@@ -384,7 +384,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
     class FTS_TextHyphn_Analyzer extends Analyzer {
         @Override
         public TokenStream tokenStream(String s, Reader reader) {
-            final KeywordTokenizer tokenizer = new KeywordTokenizer(reader);
+            KeywordTokenizer tokenizer = new KeywordTokenizer(reader);
             TokenStream tokenStream = new LowerCaseFilter(Version.LUCENE_35, tokenizer);
             tokenStream = new FISPatternReplaceFilter(tokenizer, Pattern.compile("-"), "", true);
             tokenStream = new FISPatternReplaceFilter(tokenizer, Pattern.compile("_"), "", true);
@@ -393,10 +393,10 @@ public class DoIndexServiceImpl implements IDoIndexService {
     }
 
     class FISPatternReplaceFilter extends TokenFilter {
-        private final String replacement;
-        private final boolean all;
-        private final CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
-        private final Matcher m;
+        private String replacement;
+        private boolean all;
+        private CharTermAttribute termAtt = addAttribute(CharTermAttribute.class);
+        private Matcher m;
 
         public FISPatternReplaceFilter(TokenStream in, Pattern p, String replacement, boolean all) {
             super(in);
