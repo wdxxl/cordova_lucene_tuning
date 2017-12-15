@@ -6,12 +6,7 @@ import com.flatirons.ppmob.common.callback.ICallbackService;
 import com.flatirons.ppmob.common.file.IFileService;
 import com.flatirons.ppmob.common.log.ILogService;
 import com.flatirons.ppmob.sync.index.IDoIndexService;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.j2objc.annotations.AutoreleasePool;
-import com.google.j2objc.annotations.Weak;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -50,6 +45,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import java.util.Iterator;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
+
 /**
  * Created by npeng on 6/15/2017.
  */
@@ -80,8 +81,8 @@ public class DoIndexServiceImpl implements IDoIndexService {
 
     @Override
     public void process(File basicFilesPath, String indexPath, String extractPath, String folderName, List<String> indexSubPaths,
-                        final Map<ServiceCategory, ICommonService> commonServices, final Map<String, String> fieldsConfigs,
-                        final String status, String libraryId, String publicationId) throws Exception {
+                        Map<ServiceCategory, ICommonService> commonServices, Map<String, String> fieldsConfigs,
+                        String status, String libraryId, String publicationId) throws Exception {
         if (commonServices != null && !commonServices.isEmpty()) {
             // init basic info
             this.logService = (ILogService) commonServices.get(ILogService.CATEGORY);
@@ -105,6 +106,8 @@ public class DoIndexServiceImpl implements IDoIndexService {
             FTS_TextGeneralFIN_Analyzer = null;
             FTS_TextHyphn_Analyzer = null;
             FF_TextGeneralHTML_Analyzer = null;
+            fieldsConfigs = null;
+            commonServices = null;
         } else {
             throw new Exception("Common Service list shouldn't be empty.");
         }
@@ -232,7 +235,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
         try {
             Document doc = new Document();
             jsonFromFile = fileService.getFileContent(indexFile);
-            JsonObject jsonObj = new JsonParser().parse(jsonFromFile).getAsJsonObject();
+            JSONObject jsonObj = new JSONObject(jsonFromFile);
             key = this.buildDocument(subPath, doc, jsonObj);
             writer.updateDocument(new Term("id", doc.get("id")),doc);
             jsonObj = null;
@@ -254,21 +257,22 @@ public class DoIndexServiceImpl implements IDoIndexService {
     }
 
     @AutoreleasePool
-    private String buildDocument(String subPath, Document doc, JsonObject jsonObj) {
+    private String buildDocument(String subPath, Document doc, JSONObject jsonObj) throws JSONException {
         String configValue = "";
-        JsonElement value = null;
+        Object value = null;
         String key = "";
-        for (@AutoreleasePool Map.Entry<String, JsonElement> entry : jsonObj.entrySet()) {
-            key = entry.getKey();
+        Iterator<String> tempKeys = jsonObj.keys();
+        while (tempKeys.hasNext()) {
+            key = tempKeys.next();
             configValue = this.fieldsConfigs.get("index.field." + subPath + "." + key);
             value = jsonObj.get(key);
             if (value != null) {
                 boolean stored = Boolean.parseBoolean(this.getSplitValue(configValue, "stored"));
                 boolean indexed = Boolean.parseBoolean(this.getSplitValue(configValue, "indexed"));
-                if (value instanceof JsonArray) {
+                if (value instanceof JSONArray) {
                     buildJsonArrayDocument(doc, key, stored, indexed, value);
                 } else {
-                    doc.add(new Field(key, value.getAsString(), stored ? Field.Store.YES : Field.Store.NO,
+                    doc.add(new Field(key, value.toString(), stored ? Field.Store.YES : Field.Store.NO,
                             indexed ? Field.Index.ANALYZED : Field.Index.NO, indexed ? Field.TermVector.YES : Field.TermVector.NO));
                 }
                 value = null;
@@ -278,10 +282,10 @@ public class DoIndexServiceImpl implements IDoIndexService {
     }
 
     @AutoreleasePool
-    private void buildJsonArrayDocument(Document doc,String key, boolean stored, boolean indexed, JsonElement value){
-        JsonArray array = (JsonArray) value;
-        for (@AutoreleasePool JsonElement jsonElement : array) {
-            doc.add(new Field(key, jsonElement.getAsString(), stored ? Field.Store.YES : Field.Store.NO,
+    private void buildJsonArrayDocument(Document doc,String key, boolean stored, boolean indexed, Object value) throws JSONException{
+        JSONArray array = (JSONArray) value;
+        for (int i=0;i< array.length();i++) {
+            doc.add(new Field(key, array.getString(i), stored ? Field.Store.YES : Field.Store.NO,
                     indexed ? Field.Index.ANALYZED : Field.Index.NO, indexed ? Field.TermVector.YES : Field.TermVector.NO));
         }
         array = null;
