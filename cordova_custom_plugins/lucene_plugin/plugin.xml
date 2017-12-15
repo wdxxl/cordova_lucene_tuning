@@ -37,10 +37,11 @@
     <!-- jsoup-1.8.3 -->
     <source-file framework="true" src="src/ios/libs/libfis_jsoup_183_fis_pac_lib.a" target-dir="../../.."/>
     <!-- gson-2.6.2 -->
-    <source-file framework="true" src="src/ios/libs/libfis_gson_262_pac_noarc_lib.a" target-dir="../../.."/>
+    <source-file framework="true" src="src/ios/libs/libfis_gson_282_pac_noarc_lib.a" target-dir="../../.."/>
     <!-- sync index Start -->
     <source-file src="src/ios/com/flatirons/ppmob/sync/index/IDoIndexService.m" compile-flags="-Icordova_lucene_tunning/plugins/com.wdxxl.plugin.lucene/src/ios/com/flatirons/ppmob/sync/index/IDoIndexService.m" />
     <source-file src="src/ios/com/flatirons/ppmob/sync/index/impl/DoIndexServiceImpl.m" compile-flags="-Icordova_lucene_tunning/plugins/com.wdxxl.plugin.lucene/src/ios/com/flatirons/ppmob/sync/index/impl/DoIndexServiceImpl.m" />
+    <source-file src="src/ios/com/flatirons/ppmob/sync/index/impl/DoIndexServiceImplOld.m" compile-flags="-Icordova_lucene_tunning/plugins/com.wdxxl.plugin.lucene/src/ios/com/flatirons/ppmob/sync/index/impl/DoIndexServiceImplOld.m" />
     <!-- sync index End -->
     <!-- common log Start -->
     <source-file src="src/ios/com/flatirons/ppmob/common/log/ILogService.m" compile-flags="-Icordova_lucene_tunning/plugins/com.wdxxl.plugin.lucene/src/ios/com/flatirons/ppmob/common/log/ILogService.m" />

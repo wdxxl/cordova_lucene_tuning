@@ -2,6 +2,7 @@
 
 #import <Cordova/CDV.h>
 #import "com/flatirons/ppmob/sync/index/impl/DoIndexServiceImpl.h"
+#import "com/flatirons/ppmob/sync/index/impl/DoIndexServiceImplOld.h"
 #import "java/io/File.h"
 #import "java/util/List.h"
 #import "java/util/ArrayList.h"
@@ -31,6 +32,8 @@
 
     //FRMFIM Index Tunning
     ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl *doServiceImpl = create_ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_init();
+
+    ComFlatironsPpmobSyncIndexImplDoIndexServiceImplOld *doServiceImplOld = create_ComFlatironsPpmobSyncIndexImplDoIndexServiceImplOld_init();
 
     JavaUtilHashMap *paramCommonServices = new_JavaUtilHashMap_init();
     JavaUtilArrayList *paramIndexSubPaths = new_JavaUtilArrayList_init();

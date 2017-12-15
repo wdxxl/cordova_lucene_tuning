@@ -177,7 +177,7 @@ public class DoIndexServiceImpl implements IDoIndexService {
             PerFieldAnalyzerWrapper analyzer = this.getPerFieldAnalyzerWrapper(subPath);
             // Create IndexWriter
             IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_35, analyzer);
-            iwc.setMaxBufferedDocs(5000);
+            iwc.setMaxBufferedDocs(this.size);
             iwc.setOpenMode(OpenMode.CREATE_OR_APPEND);
             writer = new IndexWriter(directory, iwc);
             if( subPath.equalsIgnoreCase("pinpoint_server") ) {

@@ -476,7 +476,7 @@ void ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_processEachFolderWithNSStr
       directory = OrgApacheLuceneStoreFSDirectory_openWithJavaIoFile_(dir);
       OrgApacheLuceneAnalysisPerFieldAnalyzerWrapper *analyzer = ComFlatironsPpmobSyncIndexImplDoIndexServiceImpl_getPerFieldAnalyzerWrapperWithNSString_(self, subPath);
       OrgApacheLuceneIndexIndexWriterConfig *iwc = new_OrgApacheLuceneIndexIndexWriterConfig_initWithOrgApacheLuceneUtilVersion_withOrgApacheLuceneAnalysisAnalyzer_(JreLoadEnum(OrgApacheLuceneUtilVersion, LUCENE_35), analyzer);
-      (void) [iwc setMaxBufferedDocsWithInt:5000];
+      (void) [iwc setMaxBufferedDocsWithInt:100];
       (void) [iwc setOpenModeWithOrgApacheLuceneIndexIndexWriterConfig_OpenMode:JreLoadEnum(OrgApacheLuceneIndexIndexWriterConfig_OpenMode, CREATE_OR_APPEND)];
       writer = new_OrgApacheLuceneIndexIndexWriter_initWithOrgApacheLuceneStoreDirectory_withOrgApacheLuceneIndexIndexWriterConfig_(directory, iwc);
       if ([((NSString *) nil_chk(subPath)) java_equalsIgnoreCase:@"pinpoint_server"]) {
