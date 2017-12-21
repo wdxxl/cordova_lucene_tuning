@@ -29,7 +29,7 @@
     <framework src="libz.tbd"/>
     <!-- Lucene Index -->
     <header-file src="src/ios/org" />
-    <source-file framework="true" src="src/ios/libs/libfis_lucene_core_group_350_noarc_lib.a" target-dir="../../.."/>
+    <source-file framework="true" src="src/ios/libs/liblucene_noarc_static_lib.a" target-dir="../../.."/>
     <!-- customer code-->
     <header-file src="src/ios/com" />
     <!-- Commons-lang3-3.4 & Commons-codec1.10 -->
