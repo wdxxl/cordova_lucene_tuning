@@ -48,7 +48,7 @@
 @interface OrgApacheLuceneIndexSegmentReader : OrgApacheLuceneIndexIndexReader < NSCopying > {
  @public
   jboolean readOnly_;
-  OrgApacheLuceneUtilCloseableThreadLocal *fieldsReaderLocal_;
+  __unsafe_unretained OrgApacheLuceneUtilCloseableThreadLocal *fieldsReaderLocal_;
   OrgApacheLuceneUtilCloseableThreadLocal *termVectorsLocal_;
   OrgApacheLuceneUtilBitVector *deletedDocs_;
   JavaUtilConcurrentAtomicAtomicInteger *deletedDocsRef_;
@@ -210,7 +210,6 @@ withOrgApacheLuceneIndexTermVectorMapper:(OrgApacheLuceneIndexTermVectorMapper *
 
 J2OBJC_EMPTY_STATIC_INIT(OrgApacheLuceneIndexSegmentReader)
 
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexSegmentReader, fieldsReaderLocal_, OrgApacheLuceneUtilCloseableThreadLocal *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexSegmentReader, termVectorsLocal_, OrgApacheLuceneUtilCloseableThreadLocal *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexSegmentReader, deletedDocs_, OrgApacheLuceneUtilBitVector *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexSegmentReader, deletedDocsRef_, JavaUtilConcurrentAtomicAtomicInteger *)

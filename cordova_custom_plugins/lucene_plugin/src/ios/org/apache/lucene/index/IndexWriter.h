@@ -59,7 +59,7 @@
   OrgApacheLuceneIndexIndexWriter_ReaderPool *readerPool_;
   OrgApacheLuceneIndexBufferedDeletesStream *bufferedDeletesStream_;
   jboolean anyNonBulkMerges_;
-  OrgApacheLuceneIndexIndexWriter_FlushControl *flushControl_;
+  __unsafe_unretained OrgApacheLuceneIndexIndexWriter_FlushControl *flushControl_;
 }
 
 #pragma mark Public
@@ -362,7 +362,6 @@ J2OBJC_VOLATILE_FIELD_SETTER(OrgApacheLuceneIndexIndexWriter, pendingCommit_, Or
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexIndexWriter, segmentInfos_, OrgApacheLuceneIndexSegmentInfos *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexIndexWriter, readerPool_, OrgApacheLuceneIndexIndexWriter_ReaderPool *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexIndexWriter, bufferedDeletesStream_, OrgApacheLuceneIndexBufferedDeletesStream *)
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexIndexWriter, flushControl_, OrgApacheLuceneIndexIndexWriter_FlushControl *)
 
 inline jlong OrgApacheLuceneIndexIndexWriter_get_WRITE_LOCK_TIMEOUT();
 inline jlong OrgApacheLuceneIndexIndexWriter_set_WRITE_LOCK_TIMEOUT(jlong value);

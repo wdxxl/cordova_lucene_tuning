@@ -89,7 +89,7 @@ J2OBJC_TYPE_LITERAL_HEADER(OrgApacheLuceneIndexStoredFieldsWriter)
 
 @interface OrgApacheLuceneIndexStoredFieldsWriter_PerDoc : OrgApacheLuceneIndexDocumentsWriter_DocWriter {
  @public
-  OrgApacheLuceneIndexDocumentsWriter_PerDocBuffer *buffer_;
+  __unsafe_unretained OrgApacheLuceneIndexDocumentsWriter_PerDocBuffer *buffer_;
   OrgApacheLuceneStoreRAMOutputStream *fdt_;
   jint numStoredFields_;
 }
@@ -112,7 +112,6 @@ J2OBJC_TYPE_LITERAL_HEADER(OrgApacheLuceneIndexStoredFieldsWriter)
 
 J2OBJC_EMPTY_STATIC_INIT(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc)
 
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc, buffer_, OrgApacheLuceneIndexDocumentsWriter_PerDocBuffer *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc, fdt_, OrgApacheLuceneStoreRAMOutputStream *)
 
 FOUNDATION_EXPORT void OrgApacheLuceneIndexStoredFieldsWriter_PerDoc_initWithOrgApacheLuceneIndexStoredFieldsWriter_(OrgApacheLuceneIndexStoredFieldsWriter_PerDoc *self, OrgApacheLuceneIndexStoredFieldsWriter *outer$);

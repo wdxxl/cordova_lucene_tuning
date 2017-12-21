@@ -100,7 +100,7 @@ J2OBJC_TYPE_LITERAL_HEADER(OrgApacheLuceneIndexTermVectorsTermsWriter)
 
 @interface OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc : OrgApacheLuceneIndexDocumentsWriter_DocWriter {
  @public
-  OrgApacheLuceneIndexDocumentsWriter_PerDocBuffer *buffer_;
+  __unsafe_unretained OrgApacheLuceneIndexDocumentsWriter_PerDocBuffer *buffer_;
   OrgApacheLuceneStoreRAMOutputStream *perDocTvf_;
   jint numVectorFields_;
   IOSIntArray *fieldNumbers_;
@@ -127,7 +127,6 @@ J2OBJC_TYPE_LITERAL_HEADER(OrgApacheLuceneIndexTermVectorsTermsWriter)
 
 J2OBJC_EMPTY_STATIC_INIT(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc)
 
-J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc, buffer_, OrgApacheLuceneIndexDocumentsWriter_PerDocBuffer *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc, perDocTvf_, OrgApacheLuceneStoreRAMOutputStream *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc, fieldNumbers_, IOSIntArray *)
 J2OBJC_FIELD_SETTER(OrgApacheLuceneIndexTermVectorsTermsWriter_PerDoc, fieldPointers_, IOSLongArray *)
